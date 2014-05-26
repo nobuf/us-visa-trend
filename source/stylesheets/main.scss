@@ -1,0 +1,115 @@
+$icon-font-path: '/fonts/bootstrap/';
+@import 'bootstrap';
+
+html, body {
+  color: #333;
+  font-family: 'Open Sans', verdana, sans-serif;
+  font-weight: 300;
+}
+#main {
+  margin-top: 30px;
+
+  .header-table {
+    width: 100%;
+    display: table;
+  }
+
+  .row-table {
+    display: table-row;
+
+    div {
+      display: table-cell;
+      float: none;
+    }
+    div.bottom {
+      vertical-align: bottom;
+    }
+  }
+}
+h1 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 36px;
+  line-height: 22px;
+  span {
+    font-size: 18px;
+  }
+}
+#contents {
+  position: relative;
+  width: 100%;
+  min-height: 400px;
+}
+#map, #chart {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-top: 20px;
+}
+.scrollable-menu {
+  height: auto;
+  max-height: 200px;
+  overflow-x: hidden;
+}
+select.btn-default {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-indent: .01px;
+  text-overflow: '';
+  background: white url('/images/selectbox-arrow.png') no-repeat 92% 47%;
+  padding-right: 20px;
+  text-align: left;
+}
+.map-tooltip {
+  background-color: white;
+  padding: 3px 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+#mapMenu .btn-toolbar,
+#chartMenu .btn-toolbar {
+  display: inline-block;
+
+  .btn-group {
+    margin-bottom: 5px;
+  }
+}
+.dimple-tooltip {
+  font-size: 12px !important;
+  font-family: 'Open Sans', verdana, sans-serif !important;
+}
+#description {
+  margin-bottom: 0;
+}
+#desc-title {
+  font-weight: 700;
+}
+#chartNote {
+  position: absolute;
+  top: 20px;
+  left: 80px;
+}
+hr {
+  border-color: #fff;
+}
+#play {
+  margin-top: -1px;
+  padding: 6px 22px;
+}
+#footer {
+  margin-top: 40px;
+  margin-bottom: 100px;
+  line-height: 170%;
+  overflow: hidden;
+}
+.profile {
+  width: 75px;
+  height: 75px;
+}
+
+@media (max-width: $screen-sm-max) {
+  .btn-toolbar .btn-group .btn {
+    padding: 6px 6px;
+    font-size: 12px;
+    height: 31px;
+  }
+}

@@ -1,0 +1,102 @@
+doctype html
+html
+  head
+    meta charset="utf-8"
+    title US Visa Trend (1997 - 2013)
+    / TODO make a one css link
+    link href="//fonts.googleapis.com/css?family=Raleway:700" rel="stylesheet" type="text/css"
+    link href='//fonts.googleapis.com/css?family=Open+Sans:300,700' rel='stylesheet' type='text/css'
+    link rel="stylesheet" href="/stylesheets/main.css"
+  body
+    #main.container
+      .header-table
+        .row.row-table
+          #head.col-sm-7
+            h1
+              | US Visa Trend
+              br
+              span 1997 - 2013
+            p
+              | Data source:&nbsp;
+              a href="http://travel.state.gov/content/visas/english/law-and-policy/statistics/non-immigrant-visas.html"
+                | travel.state.gov
+            ul.nav.nav-tabs
+              li
+                a href="#/map" Map
+              li
+                a href="#/chart" Chart
+          .col-sm-5.bottom
+            dl#description.text-right
+              dt
+                dd#desc-title
+                dd#desc-body
+      #contents
+        #map.invisible
+          #mapContainer
+          #mapMenu.text-center
+            .btn-toolbar role="toolbar"
+              .btn-group
+                - for y in 1997..2013
+                  a.btn.btn-default.menu href="#/map/#{y}"=Date.new(y).strftime("'%y")
+              .btn-group
+                button#play.btn.btn-default.glyphicon.glyphicon-play
+        #chart.invisible
+          #chartContainer
+          #chartNote
+            | (Top 10 countries)
+          #chartMenu.text-center
+            .btn-toolbar role="toolbar"
+              .btn-group
+                a.btn.btn-default.menu href="#/chart" Overview
+              .btn-group
+                a.btn.btn-default.menu href="#/chart/B-1%2C2" B-1,2
+                a.btn.btn-default.menu href="#/chart/B-1%2C2%2FBCC" B-1,2/BCC
+              .btn-group
+                a.btn.btn-default.menu href="#/chart/H-1B" H-1B
+                a.btn.btn-default.menu href="#/chart/E-2" E-2
+                a.btn.btn-default.menu href="#/chart/L-1" L-1
+                a.btn.btn-default.menu href="#/chart/O-1" O-1
+              .btn-group
+                a.btn.btn-default.menu href="#/chart/F-1" F-1
+                a.btn.btn-default.menu href="#/chart/J-1" J-1
+              .btn-group
+                a.btn.btn-default.menu href="#/chart/C-1%2FD" C-1/D
+                a.btn.btn-default.menu href="#/chart/K-1" K-1
+              .btn-group
+                select.form-control.btn.btn-default
+                  option disabled=true selected=true
+                    | Other
+                  - "A-1, A-2, A-3, B-1, B-2, B-1,2/BCV, C-1, C-2, C-3, D, D-CREW, E-1, E-3, E-3D, E-3R, F-2, F-3, G-1, G-2, G-3, G-4, G-5, H-1A, H-1B1, H-1C, H-2A, H-2B, H-2R, H-3, H-4, I, J-2, K-2, K-3, K-4, L-2, M-1, M-2, M-3, NATO-1, NATO-2, NATO-3, NATO-4, NATO-5, NATO-6, NATO-7, N-8, N-9, O-2, O-3, P-1, P-2, P-3, P-4, Q-1, Q-2, Q-3, R-1, R-2, S-5, S-6, S-7, TN, TD, T-1, T-2, T-3, T-4, T-5, U-1, U-2, U-3, U-4, V-1, V-2, V-3, U-5, E-2C, CW-1, CW-2".split(', ').sort.each do |t|
+                    option=t
+      #footer.container
+        .row
+          .col-sm-7.col-md-7
+            h3 Note
+            p
+              | Some countries are 
+              a href="http://travel.state.gov/content/visas/english/visit/visa-waiver-program.html"
+                | Visa Waiver Program 
+              | participants whose citizens can travel to the US without a visa for stays of 90 days or less.
+              |  In 
+              a href="#/chart/B-1%2C2" the B-1, 2 visa chart
+              | , South Korea and Taiwan have significant drops because 
+              a href="http://en.wikipedia.org/wiki/Visa_Waiver_Program#Recent_events_of_the_program"
+                | they joined the program in 2008 and 2012 respectively
+              | . 
+
+          .col-sm-5.col-md-4.col-md-offset-1
+            h3 About
+            .row
+              .col-sm-2.col-md-2
+                a href="https://twitter.com/nobuf"
+                  img.profile src="/images/nobu.jpg" alt="Nobu"
+              .col-sm-8.col-sm-offset-2.col-md-9.col-md-offset-1
+                p
+                  | This is a weekend project by Nobu. When US Immigration asks Nobu "what is the purpose of visit", 
+                  | he answers he is a software engineer in San Francisco.&nbsp;
+                  a href="mailto:nobu@zuzara.com" Email
+                  |  or 
+                  a href="https://twitter.com/nobuf" tweet
+                  |  him for feedback.
+
+    script src="/javascripts/application.js"

@@ -82,6 +82,8 @@ select.btn-default {
 }
 #desc-title {
   font-weight: 700;
+  font-size: 24px;
+  color: #555;
 }
 #chartNote {
   position: absolute;
@@ -112,4 +114,13 @@ hr {
     font-size: 12px;
     height: 31px;
   }
+}
+
+#countryModal {
+  position: absolute;
+  width: 620px;
+  height: 305px;
+  left: 50%;
+  margin-left: -310px;
+  overflow: hidden;
 }

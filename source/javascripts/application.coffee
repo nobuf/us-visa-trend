@@ -5,6 +5,7 @@
 //= require 'dimple/dist/dimple.v2.0.0.js'
 //= require 'director/build/director.js'
 //= require 'spinjs/spin.js'
+//= require 'bootstrap/modal'
 
 map = null
 setContainerSize = ->
@@ -22,8 +23,10 @@ setContainerSize = ->
       highlightOnHover: false
       popupOnHover: false
     fills:
-      'belizeHole': '#2980b9'
-      defaultFill: '#bdc3c7'
+      'bubbleColor': '#2667C1'
+      defaultFill: '#BED4DF'
+    bubbleConfig:
+      borderWidth: 1
   )
 setContainerSize()
 
@@ -142,19 +145,125 @@ d3.csv('/visa_data.csv')
     $.extend(d,
       Year: parseInt(d.Year)
       radius: Math.pow(d['Grand Total'] / 500, 1/2)
-      fillKey: 'belizeHole'
+      fillKey: 'bubbleColor'
     )
   )
   .get((error, rows) ->
+    palette = [
+      '#5B8CCF' # B-1,2
+      '#045868' # B-1,2/BCC
+      '#A3EBE3' # B-2
+      '#EE7170' # F-1
+      '#36B898' # J-1
+      '#1A5984' # C-1/D
+      '#FFE27D' # B-1,2/BCV
+      '#DB9657' # H-1B
+      '#1f204f' # A-2
+      '#04BCD2' # B-1
+      '#b8dcaa' # H-4
+      '#E25942' # L-1
+      '#52616E' # L-2
+      '#FD8079' # H-2B
+      '#A9CFBD' # H-2A
+    ]
+    customColors =
+      (new dimple.color(color, color) for color in palette)
+
+    fetch_visa_categories = (x, callback) ->
+      Object.keys(x).map((category) ->
+        if ['name', 'Grand Total', 'Year', \
+        'latitude', 'longitude', 'radius', 'fillKey'].indexOf(category) == -1
+          callback(x, category)
+      )
+
+    assignColors = (chart) ->
+      specialCategories = [
+        'B-1,2'
+        'B-1,2/BCC'
+        'B-2'
+        'F-1'
+        'J-1'
+        'C-1/D'
+        'B-1,2/BCV'
+        'H-1B'
+        'A-2'
+        'B-1'
+        'H-4'
+        'L-1'
+        'L-2'
+        'H-2B'
+        'H-2A'
+      ]
+      idx = 0
+      assigned = []
+      specialCategories.forEach((element, index) ->
+        chart.assignColor(element, palette[index], palette[index])
+        assigned.push(element)
+      )
+      fetch_visa_categories(rows[0], (x, category) ->
+        chart.assignColor(category, '#eee', '#ccc') if assigned.indexOf(category) == -1
+      )
+
+
     fetch_by_year = (year) ->
       rows.filter((value) ->
         value.Year == year
       )
 
+    fetch_by_country_and_year = (country, year) ->
+      r = rows.filter((value) ->
+        value.name == country && value.Year == year
+      )
+      r.shift()
+
+    renderCountry = (d) ->
+      items = []
+      fetch_visa_categories(d, (x, category) ->
+        items.push(
+          issued: x[category]
+          category: category
+          country: x.name
+        ) if x[category] > 0
+      )
+      items.sort((a, b) ->
+        if a.issued < b.issued
+          1
+        else if a.issued > b.issued
+          -1
+        else
+          0
+      )
+      $m = $('#countryModal')
+      $m.data('country', d.name)
+      title = 'Number of issued visas by visa category in ' + d.name + ' (' + d.Year + ')'
+      $m.find('.modal-title').text(title)
+      $('#countryChart').empty()
+      svg = dimple.newSvg('#countryChart', 570, 140)
+      c = new dimple.chart(svg, items)
+      c.defaultColors = customColors
+      assignColors(c)
+      c.addPctAxis('x', 'issued')
+      c.addCategoryAxis('y', 'country')
+      t = c.addSeries('category', dimple.plot.bar)
+      t.getTooltipText = (e) ->
+        [e.aggField.join(''), d3.format(',')(e.xValue)]
+      c.setBounds(9, 10, 500, 100)
+      c.draw()
+      # NOTE the position of xAxis looks weird
+      c.svg.selectAll('.dimple-title').remove()
+
     renderMap = (y) ->
       map.bubbles(fetch_by_year(y),
+        borderWidth: 1
         popupTemplate: (geo, data) ->
           '<div class="map-tooltip">' + data.name + ': ' + d3.format(',')(data['Grand Total']) + '</div>'
+      )
+      map.svg.selectAll('.datamaps-bubble').on('click', (d) ->
+        renderCountry(d)
+        $('#countryModal').on('shown.bs.modal', (e) ->
+          # lets allow scroll
+          $('body').removeClass('modal-open')
+        ).modal()
       )
 
     current_year = 1996
@@ -187,6 +296,8 @@ d3.csv('/visa_data.csv')
       current_year = parseInt(year)
       setDescription(path, current_year)
       renderMap(current_year)
+      if $('#countryModal').is(':visible')
+        renderCountry(fetch_by_country_and_year($('#countryModal').data('country'), current_year))
 
     sortByTotal = (data, type) ->
       sum = {}
@@ -225,10 +336,8 @@ d3.csv('/visa_data.csv')
             Year: year
 
       data.map((x) ->
-        Object.keys(x).map((type) ->
-          if ['name', 'Grand Total', 'Year', \
-          'latitude', 'longitude', 'radius', 'fillKey'].indexOf(type) == -1
-            find_or_initialize(type, x[type], x['Year'])
+        fetch_visa_categories(x, (x, category) ->
+          find_or_initialize(category, x[category], x['Year'])
         )
       )
       r = []
@@ -242,21 +351,7 @@ d3.csv('/visa_data.csv')
       h = $('#chartContainer').height()
       svg = dimple.newSvg('#chartContainer', w, h)
       c = new dimple.chart(svg, data)
-      colors = [
-        '#36b898'
-        '#045868'
-        '#ed5161'
-        '#63cfd4'
-        '#5e82c2'
-        '#fef170'
-        '#d6421e'
-        '#1f204f'
-        '#f69361'
-        '#b8dcaa'
-        '#71af89'
-        '#db2631'
-      ]
-      c.defaultColors = (new dimple.color(color, color) for color in colors)
+      c.defaultColors = customColors
       x = c.addCategoryAxis('x', 'Year')
       x.addOrderRule('Year')
       c.addMeasureAxis('y', yAxis)
@@ -269,6 +364,7 @@ d3.csv('/visa_data.csv')
     renderingNow = false
     viewChart = (path, type = 'Overview') ->
       return if renderingNow
+      $('#countryModal').modal('hide')
       setDescription(path, type)
       $('#chartContainer').empty()
       if type == 'Overview'
@@ -278,6 +374,7 @@ d3.csv('/visa_data.csv')
         # give a browser a time to render the spinner
         setTimeout(->
           c = drawChart(sortByType(rows), 'Total', 'type', dimple.plot.bar)
+          assignColors(c[0])
           c[0].draw()
           spinner.stop()
           renderingNow = false

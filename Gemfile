@@ -6,3 +6,4 @@ gem "middleman-livereload", "~> 3.1.0"
 gem "slim"
 gem "coffee-script"
 gem "bootstrap-sass", require: false
+gem "middleman-deploy"

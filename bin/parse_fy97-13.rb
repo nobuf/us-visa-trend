@@ -1,3 +1,6 @@
+# ARGV[0] should be the spreadsheet from http://travel.state.gov/
+# ARGV[1] expects as a csv file based on https://developers.google.com/public-data/docs/canonical/countries_csv
+#         country names must be edited otherwise it does not match with state.gov ones.
 require 'roo'
 require 'csv'
 

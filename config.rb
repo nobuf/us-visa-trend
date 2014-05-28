@@ -9,6 +9,7 @@ set :slim
 set :coffee
 
 set :layout, false
+set :relative_links, true
 
 ready do
   sprockets.append_path File.join root, 'bower_components'
@@ -17,6 +18,7 @@ end
 configure :build do
   activate :minify_css
   activate :minify_javascript
+  activate :relative_assets
 end
 
 activate :deploy do |deploy|

@@ -3,10 +3,8 @@ html
   head
     meta charset="utf-8"
     title US Visa Trend (1997 - 2013)
-    / TODO make a one css link
-    link href="//fonts.googleapis.com/css?family=Raleway:700" rel="stylesheet" type="text/css"
-    link href='//fonts.googleapis.com/css?family=Open+Sans:300,700' rel='stylesheet' type='text/css'
-    link rel="stylesheet" href="/stylesheets/main.css"
+    link href='//fonts.googleapis.com/css?family=Raleway:700|Open+Sans:300,700' rel='stylesheet' type='text/css'
+    = stylesheet_link_tag 'main'
   body
     #main.container
       .header-table
@@ -99,11 +97,11 @@ html
                   a href="https://twitter.com/nobuf" tweet
                   |  him for feedback.
 
-    script src="/javascripts/application.js"
     #countryModal.modal tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false"
       .modal-dialog
         .modal-content
           .modal-header
             button.close type="button" data-dismiss="modal" aria-hidden="true" &times;
-            h4.modal-title Hi
+            h4.modal-title
           #countryChart.modal-body
+    = javascript_include_tag 'application'

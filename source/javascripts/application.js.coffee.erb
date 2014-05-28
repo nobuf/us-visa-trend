@@ -133,7 +133,7 @@ setDescription = (path, param = null) ->
     $('#desc-body').text(desc)
 
 spinner = null
-d3.csv('<%= url_for('/visa_data.csv') %>')
+d3.csv('<%= url_for('visa_data.csv') %>')
   .on('beforesend', ->
     spinner = new Spinner().spin(document.body)
   )

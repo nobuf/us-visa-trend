@@ -5,6 +5,7 @@ html
     title US Visa Trend (1997 - 2013)
     link href='//fonts.googleapis.com/css?family=Raleway:700|Open+Sans:300,700' rel='stylesheet' type='text/css'
     = stylesheet_link_tag 'main'
+    meta property="og:image" content="#{'http://nobuf.github.io/us-visa-trend/' if build? }#{image_path('screenshot.jpg')}"
   body
     #main.container
       .header-table

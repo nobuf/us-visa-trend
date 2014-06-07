@@ -290,7 +290,7 @@ d3.csv('<%= url_for('visa_data.csv') %>')
         stopMapAnimation()
 
     viewMap = ->
-      jump('/map/1997')
+      viewMapWithYear('map', 1997)
 
     viewMapWithYear = (path, year) ->
       current_year = parseInt(year)
@@ -411,7 +411,7 @@ d3.csv('<%= url_for('visa_data.csv') %>')
     router = Router(routes).configure(
       before: beforeRender
     )
-    router.init('/map')
+    router.init('/map/1997')
 
     $('#play').click(startMapAnimation)
 
